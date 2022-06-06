@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Modsen_Pr1.Models;
+using Modsen_Pr1.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,44 +12,57 @@ namespace Modsen_Pr1.Controllers
     [ApiController]
 	public class UserController : ControllerBase
 	{
+		private readonly IUserService _userService;
 
-		private readonly EventInfoContext _context;
-
-		public UserController(EventInfoContext context)
+		public UserController(IUserService userService)
 		{
-			_context = context;
-			
+			_userService = userService;
 		}
 
-        [HttpGet]
-		public async Task<ActionResult<string>> Get(string userName, string password)
+		[HttpPost]
+		[Route("register")]
+
+		public async Task<ActionResult<User>> Post([FromBody] User user)
 		{
-			var user = _context.Users.FirstOrDefault(u => u.Login == userName && u.Password == password);
+			var result = await _userService.AddAsync(user);
 
-			if (user == null) { return NotFound(); }
-
-			var claims = new[]
-			{
-			new Claim( ClaimTypes.NameIdentifier , user.Login ),
-		};
-
-			var token = new JwtSecurityToken
-			(
-				issuer: "https://localhost:7207",
-				audience: "https://localhost:7207",
-				claims: claims,
-				expires: DateTime.UtcNow.AddMinutes(30),
-				notBefore: DateTime.UtcNow,
-				signingCredentials: new SigningCredentials(
-					new SymmetricSecurityKey(
-						Encoding.UTF8.GetBytes(
-							"111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111")),
-					SecurityAlgorithms.HmacSha256)
-			);
-
-			var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-			return Ok(tokenString);
+			return result.Match<ActionResult<User>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
 		}
+
+		[HttpPut]
+		[Route("{id}")]
+		public async Task<ActionResult<User>> Put(int id, [FromBody] User user)
+		{
+			var result = await _userService.UpdateAsync(id, user);
+
+			return result.Match<ActionResult<User>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
+
+		[HttpDelete]
+		[Route("{id}")]
+		public async Task<ActionResult<User>> Delete(int id)
+		{
+			var result = await _userService.DeleteAsync(id);
+
+			return result.Match<ActionResult<User>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
+
+		[HttpPost]
+		[Route("login")]
+		public async Task<ActionResult<string>> Login(User user)
+		{
+			var result = await _userService.LoginAsync(user);
+
+			return result.Match<ActionResult<string>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
+
 	}
 }

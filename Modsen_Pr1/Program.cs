@@ -4,8 +4,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Modsen_Pr1;
 using Modsen_Pr1.Mapping;
+using Modsen_Pr1.Repositories;
+using Modsen_Pr1.Repositories.Interfaces;
+using Modsen_Pr1.Services;
 using System.Text;
-using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +16,11 @@ builder.Services.AddDbContext<EventInfoContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EventInfoContext") ??
     throw new InvalidOperationException("Connection string 'EventInfoContext' not found.")));
 
-builder.Services.AddControllers()
-       .AddJsonOptions(j => j.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IEventInfoService, EventInfoService>();
+builder.Services.AddScoped<IEventInfoRepository, EventInfoRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 

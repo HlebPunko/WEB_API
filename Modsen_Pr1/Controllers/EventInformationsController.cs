@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Modsen_Pr1.DTO.Requests;
 using Modsen_Pr1.DTO.Responses;
 using Modsen_Pr1.Models;
+using Modsen_Pr1.Services;
+using System.Reflection;
 
 namespace Modsen_Pr1.Controllers
 {
@@ -12,121 +14,70 @@ namespace Modsen_Pr1.Controllers
     [ApiController]
     public class EventInformationsController : ControllerBase
     {
-        private readonly EventInfoContext _context;
+        private readonly IEventInfoService _eventInfoService;
         private readonly IMapper _mapper;
         
-        public EventInformationsController(EventInfoContext context, IMapper mapper)
+        public EventInformationsController(IEventInfoService eventInfoService, IMapper mapper)
         {
-            _context = context;
+            _eventInfoService = eventInfoService;
             _mapper = mapper;
         }
 
-        // GET: api/EventInformations
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<EventInfoResponse>>> GetEventInformations()
-        {
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<EventInformation>>> GetAll()
+		{
+			var response = await _eventInfoService.GetAllAsync();
+			return response.Match<ActionResult<IEnumerable<EventInformation>>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
 
-            if (_context.EventInformations == null)
-            {
-                return NotFound();
-            }
-            var events = await _context.EventInformations.ToListAsync();
-            var response = _mapper.Map<IEnumerable<EventInfoResponse>>(events);
-            return Ok(response);
-        }
+		[HttpGet]
+		[Route("{id}")]
+		public async Task<ActionResult<EventInformation>> Get(int id)
+		{
+			var result = await _eventInfoService.GetAsync(id);
 
-        // GET: api/EventInformations/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<EventInformation>> GetEventInformation(int id)
-        {
-            if (_context.EventInformations == null)
-            {
-                return NotFound();
-            }
-            var eventInformation = await _context.EventInformations.FindAsync(id);
+			return result.Match<ActionResult<EventInformation>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
 
-            if (eventInformation == null)
-            {
-                return NotFound();
-            }
+		[HttpPost]
+		[Authorize]
+		public async Task<ActionResult<EventInformation>> Post([FromBody] EventInformation eventInfo)
+		{
+			var result = await _eventInfoService.AddAsync(eventInfo);
 
-            var response = _mapper.Map<EventInfoResponse>(eventInformation);
-            return Ok(response);
-        }
+			return result.Match<ActionResult<EventInformation>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
 
-        // PUT: api/EventInformations/5
-        [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> PutEventInformation(int id, EventInfoCreateRequest eventInformation)
-        {
-            var model = _mapper.Map<EventInformation>(eventInformation);
+		[HttpPut]
+		[Route("{id}")]
+		[Authorize]
+		public async Task<ActionResult<EventInformation>> Put(int id, [FromBody] EventInformation eventInfo)
+		{
+			var result = await _eventInfoService.UpdateAsync(id, eventInfo);
 
-            model.Id = id;
+			return result.Match<ActionResult<EventInformation>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
 
-            _context.Entry(model).State = EntityState.Modified;
+		[HttpDelete]
+		[Route("{id}")]
+		[Authorize]
+		public async Task<ActionResult<EventInformation>> Delete(int id)
+		{
+			var result = await _eventInfoService.DeleteAsync(id);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EventInformationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			return result.Match<ActionResult<EventInformation>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
 
-            return NoContent();
-        }
-
-        // POST: api/EventInformations
-        [HttpPost]
-        [Authorize]
-        public async Task<ActionResult<EventInfoResponse>> PostEventInformation(EventInfoCreateRequest eventInformation)
-        {
-            if (_context.EventInformations == null)
-            {
-                return Problem("Entity set 'EventInfoContext.EventInformations'  is null.");
-            }
-            var model = _mapper.Map<EventInformation>(eventInformation);
-
-            _context.EventInformations.Add(model);
-            await _context.SaveChangesAsync();
-
-            var response = _mapper.Map<EventInfoResponse>(model);
-
-            return CreatedAtAction("GetEventInformation", new { id = response.Id }, response);
-        }
-
-        // DELETE: api/EventInformations/5
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteEventInformation(int id)
-        {
-            if (_context.EventInformations == null)
-            {
-                return NotFound();
-            }
-            var eventInformation = await _context.EventInformations.FindAsync(id);
-            if (eventInformation == null)
-            {
-                return NotFound();
-            }
-
-            _context.EventInformations.Remove(eventInformation);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool EventInformationExists(int id)
-        {
-            return (_context.EventInformations?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
-    }
+		
+	}
 }
