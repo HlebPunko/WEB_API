@@ -15,7 +15,6 @@ namespace Modsen_Pr1.Controllers
         private readonly EventInfoContext _context;
         private readonly IMapper _mapper;
         
-
         public EventInformationsController(EventInfoContext context, IMapper mapper)
         {
             _context = context;
@@ -129,6 +128,5 @@ namespace Modsen_Pr1.Controllers
         {
             return (_context.EventInformations?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-
     }
 }
