@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +14,7 @@ namespace Modsen_Pr1.Controllers
     {
         private readonly EventInfoContext _context;
         private readonly IMapper _mapper;
+        
 
         public EventInformationsController(EventInfoContext context, IMapper mapper)
         {
