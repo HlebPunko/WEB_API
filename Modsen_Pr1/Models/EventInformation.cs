@@ -7,4 +7,6 @@ public class EventInformation
     public string Organizer { get; set; } = null!;
     public DateTime TimeSpending { get; set; }
     public string Location { get; set; } = null!;
+    public User User { get; set; } = null!;
+    public int UserId { get; set; } = 0;
 }

@@ -7,15 +7,23 @@ namespace Modsen_Pr1.Services
     public class EventInfoService : IEventInfoService
     {
         private readonly IEventInfoRepository _repository;
+        private readonly IAuthenticationService _authenticationService;
 
-        public EventInfoService(IEventInfoRepository repository)
+        public EventInfoService(IEventInfoRepository repository, IAuthenticationService authenticationService)
         {
             _repository = repository;
+            _authenticationService = authenticationService;
         }
         public async Task<Result<EventInformation>> AddAsync(EventInformation entity)
         {
+            var user = _authenticationService.CurrentUser;
+
+            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("Error"));//TODO
+
             try
             {
+                if (entity.UserId == 0) entity.UserId = user.Id;
+
                 var addedEntity = await _repository.AddAsync(entity);
 
                 if (addedEntity is null) return new Result<EventInformation>(new ArgumentException());
@@ -27,8 +35,16 @@ namespace Modsen_Pr1.Services
 
         public async Task<Result<EventInformation>> DeleteAsync(int id)
         {
+            var user = _authenticationService.CurrentUser;
+
+            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("Error"));//TODO
+
             try
             {
+                var currentEntity = await _repository.GetAsync(id);
+
+                if (currentEntity is null || currentEntity.UserId != user.Id) return new Result<EventInformation>(new ArgumentOutOfRangeException("Wrong UserId"));
+
                 var deletedEntity = await _repository.DeleteAsync(id);
 
                 if (deletedEntity is null) return new Result<EventInformation>(new ArgumentException());
@@ -40,23 +56,31 @@ namespace Modsen_Pr1.Services
 
         public async Task<Result<IEnumerable<EventInformation>>> GetAllAsync()
         {
+            var user = _authenticationService.CurrentUser;
+
+            if (user is null) return new Result<IEnumerable<EventInformation>>(new BadHttpRequestException("Error"));//TODO
+
             try
             {
                 var eventInfos = await _repository.GetAllAsync();
 
-                return new Result<IEnumerable<EventInformation>>(eventInfos);
+                return new Result<IEnumerable<EventInformation>>(eventInfos.Where(x => x.UserId == user.Id));
             }
             catch (Exception ex) { return new Result<IEnumerable<EventInformation>>(ex); }
         }
 
         public async Task<Result<EventInformation>> GetAsync(int id)
         {
+            var user = _authenticationService.CurrentUser;
+
+            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("Error"));//TODO
+
             try
             {
                 var result = await _repository.GetAsync(id);
 
                 // TODO : replace with custom exception
-                if (result is null) return new Result<EventInformation>(new ArgumentException());
+                if (result is null || result.UserId != user.Id) return new Result<EventInformation>(new ArgumentException());
 
                 return new Result<EventInformation>(result);
             }
@@ -65,8 +89,18 @@ namespace Modsen_Pr1.Services
 
         public async Task<Result<EventInformation>> UpdateAsync(int id, EventInformation entity)
         {
+            var user = _authenticationService.CurrentUser;
+
+            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("Error"));//TODO
+
             try
             {
+                var currentEntity = await _repository.GetAsync(id);
+                
+                if (currentEntity is null || currentEntity.UserId != user.Id) return new Result<EventInformation>(new ArgumentOutOfRangeException("Wrong UserId"));
+
+                entity.UserId = user.Id;
+                
                 var updatedEntity = await _repository.UpdateAsync(id, entity);
 
 

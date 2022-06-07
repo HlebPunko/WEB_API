@@ -28,10 +28,18 @@ namespace Modsen_Pr1.Repositories
 
 		public async Task<EventInformation?> UpdateAsync(int id, EventInformation entity)
 		{
-			var eventInfo = await _context.EventInformations.FirstOrDefaultAsync(u => u.Id == id); ;
+			var eventInfo = await _context.EventInformations.FirstOrDefaultAsync(u => u.Id == id); 
 
 			if (eventInfo is null) return null;
-			_context.Update(entity);
+			//_context.Update(entity);
+			
+			eventInfo.Location = entity.Location;
+			eventInfo.EventDescription = entity.EventDescription;
+			eventInfo.EventName = entity.EventName;
+			eventInfo.Organizer = entity.Organizer;
+
+			_context.Entry(eventInfo).State = EntityState.Modified;
+
 			var resSave = await _context.SaveChangesAsync() > 0;
 
 			if (!resSave) return null;

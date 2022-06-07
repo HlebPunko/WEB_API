@@ -7,7 +7,7 @@ namespace Modsen_Pr1
     {
         public EventInfoContext(DbContextOptions<EventInfoContext> options) : base(options)
         {
-            Database.EnsureCreated();
+			Database.EnsureCreated();
         }
         //AppContext TODO
         public DbSet<EventInformation> EventInformations { get; set; } = null!;
@@ -23,7 +23,13 @@ namespace Modsen_Pr1
 						.IsRequired();
 			modelBuilder.Entity<User>().Property(u => u.Password)
 						.IsRequired();
-			modelBuilder.Entity<User>().HasData(new User[] { new User() {Id = 200, Login = "1111", Password = "1111"}});
+
+			//TODO добавить config EventInfo
+
+			modelBuilder.Entity<EventInformation>()
+				.HasOne(x => x.User)
+				.WithMany(x => x.EventInformations)
+				.HasForeignKey(x => x.UserId);
 		}
 	}
 }

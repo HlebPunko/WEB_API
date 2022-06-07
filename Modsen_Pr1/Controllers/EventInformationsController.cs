@@ -24,57 +24,59 @@ namespace Modsen_Pr1.Controllers
         }
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<EventInformation>>> GetAll()
+		public async Task<ActionResult<IEnumerable<EventInfoResponse>>> GetAll()
 		{
 			var response = await _eventInfoService.GetAllAsync();
-			return response.Match<ActionResult<IEnumerable<EventInformation>>>(
-				success => Ok(success),
+			return response.Match<ActionResult<IEnumerable<EventInfoResponse>>>(
+				success => Ok(_mapper.Map<IEnumerable<EventInfoResponse>>(success)),
 				failure => BadRequest(failure));
 		}
 
 		[HttpGet]
 		[Route("{id}")]
-		public async Task<ActionResult<EventInformation>> Get(int id)
+		public async Task<ActionResult<EventInfoResponse>> Get(int id)
 		{
 			var result = await _eventInfoService.GetAsync(id);
 
-			return result.Match<ActionResult<EventInformation>>(
-				success => Ok(success),
+			return result.Match<ActionResult<EventInfoResponse>>(
+				success => Ok(_mapper.Map<EventInfoResponse>(success)),
 				failure => BadRequest(failure));
 		}
 
 		[HttpPost]
 		[Authorize]
-		public async Task<ActionResult<EventInformation>> Post([FromBody] EventInformation eventInfo)
+		public async Task<ActionResult<EventInfoResponse>> Post([FromBody] EventInfoCreateRequest eventInfo)
 		{
-			var result = await _eventInfoService.AddAsync(eventInfo);
+			var mapped = _mapper.Map<EventInformation>(eventInfo);
+			var result = await _eventInfoService.AddAsync(mapped);
 
-			return result.Match<ActionResult<EventInformation>>(
-				success => Ok(success),
+			return result.Match<ActionResult<EventInfoResponse>>(
+				success => Ok(_mapper.Map<EventInfoResponse>(success)),
 				failure => BadRequest(failure));
 		}
 
 		[HttpPut]
 		[Route("{id}")]
 		[Authorize]
-		public async Task<ActionResult<EventInformation>> Put(int id, [FromBody] EventInformation eventInfo)
+		public async Task<ActionResult<EventInfoResponse>> Put(int id, [FromBody] EventInfoCreateRequest eventInfo)
 		{
-			var result = await _eventInfoService.UpdateAsync(id, eventInfo);
+			var mapped = _mapper.Map<EventInformation>(eventInfo);
+			var result = await _eventInfoService.UpdateAsync(id, mapped);
 
-			return result.Match<ActionResult<EventInformation>>(
-				success => Ok(success),
+			return result.Match<ActionResult<EventInfoResponse>>(
+				success => Ok(_mapper.Map<EventInfoResponse>(success)),
 				failure => BadRequest(failure));
 		}
 
 		[HttpDelete]
 		[Route("{id}")]
 		[Authorize]
-		public async Task<ActionResult<EventInformation>> Delete(int id)
+		public async Task<ActionResult<EventInfoResponse>> Delete(int id)
 		{
 			var result = await _eventInfoService.DeleteAsync(id);
 
-			return result.Match<ActionResult<EventInformation>>(
-				success => Ok(success),
+			return result.Match<ActionResult<EventInfoResponse>>(
+				success => Ok(_mapper.Map<EventInfoResponse>(success)),
 				failure => BadRequest(failure));
 		}
 

@@ -21,7 +21,6 @@ namespace Modsen_Pr1.Services
 		{
 			var entity = await _repository.GetAsync(user.Id);
 
-			
 			//var user = users.SingleOrDefault(u => u.Name == username && u.Password == password);
 
 			if (entity is null)
@@ -32,11 +31,12 @@ namespace Modsen_Pr1.Services
 			return new Result<string>(token);
 		}
 
-		private string GenerateToken(User user)
+		private static string GenerateToken(User user)
 		{
 			var claims = new[]
 			{
-			new Claim( ClaimTypes.Name , user.Login ) ,
+			new Claim( ClaimTypes.Name , user.Login ),
+			new Claim( ClaimTypes.NameIdentifier , user.Id.ToString() ),
 		};
 
 			var token = new JwtSecurityToken
