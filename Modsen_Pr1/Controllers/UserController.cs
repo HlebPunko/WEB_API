@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Modsen_Pr1.DTO.Requests;
+using Modsen_Pr1.DTO.Responses;
 using Modsen_Pr1.Models;
 using Modsen_Pr1.Services;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,21 +16,23 @@ namespace Modsen_Pr1.Controllers
 	public class UserController : ControllerBase
 	{
 		private readonly IUserService _userService;
+		private readonly IMapper _mapper;
 
-		public UserController(IUserService userService)
+		public UserController(IUserService userService, IMapper mapper)
 		{
 			_userService = userService;
+			_mapper = mapper;
 		}
 
 		[HttpPost]
 		[Route("register")]
-
-		public async Task<ActionResult<User>> Post([FromBody] User user)
+		public async Task<ActionResult<UserResponse>> Post([FromBody] UserCreateRequest user)
 		{
-			var result = await _userService.AddAsync(user);
+			var mapped = _mapper.Map<User>(user);
+			var result = await _userService.AddAsync(mapped);
 
-			return result.Match<ActionResult<User>>(
-				success => Ok(success),
+			return result.Match<ActionResult<UserResponse>>(
+				success => Ok(_mapper.Map<UserResponse>(success)),
 				failure => BadRequest(failure));
 		}
 
@@ -55,14 +60,14 @@ namespace Modsen_Pr1.Controllers
 
 		[HttpPost]
 		[Route("login")]
-		public async Task<ActionResult<string>> Login(User user)
+		public async Task<ActionResult<AuthResponse>> Login(AuthRequest authRequest)
 		{
-			var result = await _userService.LoginAsync(user);
+			var mapped = _mapper.Map<User>(authRequest);
+			var result = await _userService.LoginAsync(mapped);
 
-			return result.Match<ActionResult<string>>(
-				success => Ok(success),
+			return result.Match<ActionResult<AuthResponse>>(
+				success => Ok(new AuthResponse { Token = success, Login = mapped.Login}),
 				failure => BadRequest(failure));
 		}
-
 	}
 }

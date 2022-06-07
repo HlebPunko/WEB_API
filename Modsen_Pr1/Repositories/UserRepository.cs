@@ -50,4 +50,8 @@ public class UserRepository : IUserRepository
 
         return user;
     }
+
+    public Task<User?> GetAsync(string userName, string password) =>
+        _context.Users.FirstOrDefaultAsync(x => x.Login == userName && x.Password == password);
+    
 }

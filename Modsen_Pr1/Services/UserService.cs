@@ -19,9 +19,7 @@ namespace Modsen_Pr1.Services
 
         public async Task<Result<string>> LoginAsync(User user)
 		{
-			var entity = await _repository.GetAsync(user.Id);
-
-			//var user = users.SingleOrDefault(u => u.Name == username && u.Password == password);
+			var entity = await _repository.GetAsync(user.Login, user.Password);
 
 			if (entity is null)
 				return new Result<string>(new ArgumentException());

@@ -64,13 +64,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidAudience = "https://localhost:7207",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
             "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"))
+   //TODO <-
     };
 });
 
 // add authorization
 builder.Services.AddAuthorization();
-builder.Services.AddAutoMapper(typeof(EventInfoProfile));
-builder.Services.AddHttpContextAccessor();//TODO
+builder.Services.AddAutoMapper(typeof(EventInfoProfile), typeof(UserProfile), typeof(AuthProfile));
+
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 //рср онрнл онреярхрэ TODO
