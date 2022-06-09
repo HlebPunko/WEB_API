@@ -32,12 +32,11 @@ Next, at the command line, enter the following commands:
   + `PUT /api/User/{id}` Updates user data by id (id can be found via `GET /api/User/allUsers`)
   + `POST /api/User/login` Login by **login** and **password** 
 + Button `Authorize`
-> Note <br> 1. Until you are authenticated, you cannot use the following features:
+> Note <br>   1. Until you are authenticated, you cannot use the following features:
 > + `POST`
 > + `PUT` (besides `login`)
 > + `DELETE`
-> + `GET` (only when working with `User`)
-> Advice 
+> + `GET` (only when working with `User`)<br>
 > + In order not to be intimidated, it is best to log in immediately
 ## Using the WEP API
 If you have read the previous article, consider working in this WEB API
