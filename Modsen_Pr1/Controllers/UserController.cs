@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Modsen_Pr1.DTO.Requests;
@@ -24,6 +25,16 @@ namespace Modsen_Pr1.Controllers
 			_mapper = mapper;
 		}
 
+		[HttpGet]
+		[Route("allUsers")]
+		public async Task<ActionResult<IEnumerable<User>>> GetAll()
+		{
+			var response = await _userService.GetAllAsync();
+			return response.Match<ActionResult<IEnumerable<User>>>(
+				success => Ok(success),
+				failure => BadRequest(failure));
+		}
+
 		[HttpPost]
 		[Route("register")]
 		public async Task<ActionResult<UserResponse>> Post([FromBody] UserCreateRequest user)
@@ -38,23 +49,15 @@ namespace Modsen_Pr1.Controllers
 
 		[HttpPut]
 		[Route("{id}")]
-		public async Task<ActionResult<User>> Put(int id, [FromBody] User user)
+		[Authorize]
+		public async Task<ActionResult<UserResponse>> Put(int id, [FromBody] UserCreateRequest user)//работаю вот тут //TODO
+			//убрать id
 		{
-			var result = await _userService.UpdateAsync(id, user);
+			var mapped = _mapper.Map<User>(user);
+			var result = await _userService.UpdateAsync(id, mapped);
 
-			return result.Match<ActionResult<User>>(
-				success => Ok(success),
-				failure => BadRequest(failure));
-		}
-
-		[HttpDelete]
-		[Route("{id}")]
-		public async Task<ActionResult<User>> Delete(int id)
-		{
-			var result = await _userService.DeleteAsync(id);
-
-			return result.Match<ActionResult<User>>(
-				success => Ok(success),
+			return result.Match<ActionResult<UserResponse>>(
+				success => Ok(_mapper.Map<UserResponse>(success)),
 				failure => BadRequest(failure));
 		}
 
@@ -64,7 +67,7 @@ namespace Modsen_Pr1.Controllers
 		{
 			var mapped = _mapper.Map<User>(authRequest);
 			var result = await _userService.LoginAsync(mapped);
-
+			
 			return result.Match<ActionResult<AuthResponse>>(
 				success => Ok(new AuthResponse { Token = success, Login = mapped.Login}),
 				failure => BadRequest(failure));

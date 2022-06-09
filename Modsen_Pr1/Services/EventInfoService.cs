@@ -18,7 +18,7 @@ namespace Modsen_Pr1.Services
         {
             var user = _authenticationService.CurrentUser;
 
-            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("Error"));//TODO
+            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("User not found"));
 
             try
             {
@@ -37,7 +37,7 @@ namespace Modsen_Pr1.Services
         {
             var user = _authenticationService.CurrentUser;
 
-            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("Error"));//TODO
+            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("User not found"));
 
             try
             {
@@ -58,7 +58,7 @@ namespace Modsen_Pr1.Services
         {
             var user = _authenticationService.CurrentUser;
 
-            if (user is null) return new Result<IEnumerable<EventInformation>>(new BadHttpRequestException("Error"));//TODO
+            if (user is null) return new Result<IEnumerable<EventInformation>>(new BadHttpRequestException("User not found"));
 
             try
             {
@@ -73,13 +73,12 @@ namespace Modsen_Pr1.Services
         {
             var user = _authenticationService.CurrentUser;
 
-            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("Error"));//TODO
+            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("User not found"));
 
             try
             {
                 var result = await _repository.GetAsync(id);
 
-                // TODO : replace with custom exception
                 if (result is null || result.UserId != user.Id) return new Result<EventInformation>(new ArgumentException());
 
                 return new Result<EventInformation>(result);
@@ -91,7 +90,7 @@ namespace Modsen_Pr1.Services
         {
             var user = _authenticationService.CurrentUser;
 
-            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("Error"));//TODO
+            if (user is null) return new Result<EventInformation>(new BadHttpRequestException("User not found"));
 
             try
             {

@@ -11,7 +11,7 @@ using Modsen_Pr1;
 
 namespace Modsen_Pr1.Migrations
 {
-    [DbContext(typeof(EventInfoContext))]
+    [DbContext(typeof(AppContext))]
     [Migration("20220606120550_MyMigration")]
     partial class MyMigration
     {

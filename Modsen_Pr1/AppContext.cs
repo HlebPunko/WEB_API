@@ -3,13 +3,13 @@ using Modsen_Pr1.Models;
 
 namespace Modsen_Pr1
 {
-    public class EventInfoContext : DbContext
+    public class AppContext : DbContext
     {
-        public EventInfoContext(DbContextOptions<EventInfoContext> options) : base(options)
+        public AppContext(DbContextOptions<AppContext> options) : base(options)
         {
 			Database.EnsureCreated();
         }
-        //AppContext TODO
+
         public DbSet<EventInformation> EventInformations { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
 
@@ -23,8 +23,6 @@ namespace Modsen_Pr1
 						.IsRequired();
 			modelBuilder.Entity<User>().Property(u => u.Password)
 						.IsRequired();
-
-			//TODO добавить config EventInfo
 
 			modelBuilder.Entity<EventInformation>()
 				.HasOne(x => x.User)

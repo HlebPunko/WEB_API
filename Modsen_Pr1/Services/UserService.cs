@@ -44,17 +44,32 @@ namespace Modsen_Pr1.Services
 				claims: claims,
 				expires: DateTime.UtcNow.AddMinutes(30),
 				notBefore: DateTime.UtcNow,
-				signingCredentials: new SigningCredentials(
-					new SymmetricSecurityKey(
-						Encoding.UTF8.GetBytes(
-							"111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111")),
-					SecurityAlgorithms.HmacSha256)
-			);
+            signingCredentials: new SigningCredentials(
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(
+						"LK2Mklm2kmk49l3l2SHBCkjnJH89jK8ou9Oij98uY8HKJ")),
+                SecurityAlgorithms.HmacSha256)
+            );
 
-			var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
 			return tokenString;
 		}
+
+		public async Task<Result<IEnumerable<User>>> GetAllAsync()
+        {
+			try
+			{
+				var res = await _repository.GetAllAsync();
+
+				if (res is null) return  new Result<IEnumerable<User>>(new ArgumentException());
+
+				return new Result<IEnumerable<User>>(res);
+			}
+			catch (Exception ex) { return new Result<IEnumerable<User>>(ex); }
+			
+
+        }
 
 		public async Task<Result<User>> AddAsync(User entity)
 		{
@@ -74,7 +89,6 @@ namespace Modsen_Pr1.Services
 			{
 				var result = await _repository.GetAsync(id);
 
-				// TODO : replace with custom exception
 				if (result is null) return new Result<User>(new ArgumentException());
 
 				return new Result<User>(result);
@@ -84,7 +98,7 @@ namespace Modsen_Pr1.Services
 
 		public async Task<Result<User>> UpdateAsync(int id, User entity)
 		{
-			try
+			try 
 			{
 				var updatedEntity = await _repository.UpdateAsync(id, entity);
 				
@@ -92,19 +106,6 @@ namespace Modsen_Pr1.Services
 				if (updatedEntity is null) return new Result<User>(new ArgumentException());
 
 				return new Result<User>(updatedEntity);
-			}
-			catch (Exception ex) { return new Result<User>(ex); }
-		}
-
-		public async Task<Result<User>> DeleteAsync(int id)
-		{
-			try
-			{
-				var deletedEntity = await _repository.DeleteAsync(id);
-				
-				if (deletedEntity is null) return new Result<User>(new ArgumentException());
-
-				return new Result<User>(deletedEntity);
 			}
 			catch (Exception ex) { return new Result<User>(ex); }
 		}

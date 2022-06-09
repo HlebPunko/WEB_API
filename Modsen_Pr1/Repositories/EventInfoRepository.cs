@@ -6,9 +6,9 @@ namespace Modsen_Pr1.Repositories
 {
     public class EventInfoRepository : IEventInfoRepository
     {
-		protected readonly EventInfoContext _context;
+		protected readonly AppContext _context;
 		
-		public EventInfoRepository(EventInfoContext context)
+		public EventInfoRepository(AppContext context)
 		{
 			_context = context;
 		}

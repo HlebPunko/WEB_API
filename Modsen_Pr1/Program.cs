@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<EventInfoContext>(options =>
+builder.Services.AddDbContext<Modsen_Pr1.AppContext>((DbContextOptionsBuilder options) =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EventInfoContext") ??
     throw new InvalidOperationException("Connection string 'EventInfoContext' not found.")));
 
@@ -63,8 +63,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = "https://localhost:7207",
         ValidAudience = "https://localhost:7207",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"))
-   //TODO <-
+            "LK2Mklm2kmk49l3l2SHBCkjnJH89jK8ou9Oij98uY8HKJ"))
+
     };
 });
 
@@ -75,12 +75,11 @@ builder.Services.AddAutoMapper(typeof(EventInfoProfile), typeof(UserProfile), ty
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
-//рср онрнл онреярхрэ TODO
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    var contextEventInfo = services.GetRequiredService<EventInfoContext>();
+    var contextEventInfo = services.GetRequiredService<global::Modsen_Pr1.AppContext>();
     DbInitializer.Initialize(contextEventInfo);
 }
 // Configure the HTTP request pipeline.

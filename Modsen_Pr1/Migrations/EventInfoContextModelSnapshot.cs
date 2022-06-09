@@ -10,7 +10,7 @@ using Modsen_Pr1;
 
 namespace Modsen_Pr1.Migrations
 {
-    [DbContext(typeof(EventInfoContext))]
+    [DbContext(typeof(AppContext))]
     partial class EventInfoContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

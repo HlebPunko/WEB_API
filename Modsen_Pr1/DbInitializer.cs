@@ -4,7 +4,7 @@ namespace Modsen_Pr1;
 
 public class DbInitializer
 {
-    public static void Initialize(EventInfoContext context)
+    public static void Initialize(AppContext context)
     {
         if (context.Users.Any())
         {

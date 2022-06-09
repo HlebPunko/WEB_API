@@ -5,9 +5,9 @@ namespace Modsen_Pr1.Services
 {
     public interface IUserService
     {
+        Task <Result<IEnumerable<User>>> GetAllAsync ();
         Task<Result<User>> AddAsync(User user);
         Task<Result<User>> UpdateAsync(int id, User user);
-        Task<Result<User>> DeleteAsync(int id);
         Task<Result<string>> LoginAsync(User user);
     }
 }
