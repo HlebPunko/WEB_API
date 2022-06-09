@@ -55,15 +55,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 {
     options.TokenValidationParameters = new TokenValidationParameters()
     {
-        ValidateActor = false,
-        ValidateAudience = false,
-        ValidateIssuer = false,
-        ValidateLifetime = false,
-        ValidateIssuerSigningKey = false,
-        ValidIssuer = "https://localhost:7207",
-        ValidAudience = "https://localhost:7207",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            "LK2Mklm2kmk49l3l2SHBCkjnJH89jK8ou9Oij98uY8HKJ"))
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = UserService.Issuer,
+        ValidAudience = UserService.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(UserService.SecretKey))
 
     };
 });
@@ -82,7 +77,7 @@ using (var scope = app.Services.CreateScope())
     var contextEventInfo = services.GetRequiredService<global::Modsen_Pr1.AppContext>();
     DbInitializer.Initialize(contextEventInfo);
 }
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

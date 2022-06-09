@@ -8,11 +8,14 @@ using System.Text;
 
 namespace Modsen_Pr1.Services
 {
-    public class UserService : IUserService 
-    {
+    public class UserService : IUserService
+	{
         private readonly IUserRepository _repository;
+		public static readonly string SecretKey = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJOMZ4zY";
+		public static readonly string Issuer = "https://localhost:7207";
+		public static readonly string Audience = "https://localhost:7207";
 
-        public UserService(IUserRepository repository)
+		public UserService(IUserRepository repository)
         {
 			_repository = repository;
         }
@@ -39,15 +42,15 @@ namespace Modsen_Pr1.Services
 
 			var token = new JwtSecurityToken
 			(
-				issuer: "https://localhost:7207",
-				audience: "https://localhost:7207",
+				issuer: Issuer,
+				audience: Audience,
 				claims: claims,
 				expires: DateTime.UtcNow.AddMinutes(30),
 				notBefore: DateTime.UtcNow,
             signingCredentials: new SigningCredentials(
                 new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(
-						"LK2Mklm2kmk49l3l2SHBCkjnJH89jK8ou9Oij98uY8HKJ")),
+						SecretKey)),
                 SecurityAlgorithms.HmacSha256)
             );
 

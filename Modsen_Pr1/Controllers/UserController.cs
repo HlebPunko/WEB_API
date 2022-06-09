@@ -27,6 +27,7 @@ namespace Modsen_Pr1.Controllers
 
 		[HttpGet]
 		[Route("allUsers")]
+		[Authorize]
 		public async Task<ActionResult<IEnumerable<User>>> GetAll()
 		{
 			var response = await _userService.GetAllAsync();
