@@ -35,7 +35,7 @@ Next, at the command line, enter the following commands:
 + Button `Authorize`
 > Note <br> 1. Until you are authenticated, you cannot use the following features:
 > + `POST`
-> + `PUT`
+> + `PUT` (besides `login`)
 > + `DELETE`
 > + `GET` (only when working with `User`)
 ## Using the WEP API
