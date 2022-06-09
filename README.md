@@ -37,6 +37,7 @@ Next, at the command line, enter the following commands:
 > + `POST`
 > + `PUT`
 > + `DELETE`
+> + `GET` (only when working with `User`)
 ## Using the WEP API
 If you have read the previous article, consider working in this WEB API
 To use the selected function, click on it and then click on the `Try it out` button
