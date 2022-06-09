@@ -2,24 +2,23 @@
 ## Used technologies
 Using ASP.NET Core Web API With JWT, AutoMapper, Swagger, EF Core, MS SQL <br>
 This project has everything you need to get started with ASP.NET Core Web API
-+ ASP.NET Core Web API
-+ Entity Framework Core (SQL Server)
-+ JWT
-
-+ Swagger
-+ AutoMapper
++ `ASP.NET Core Web API`
++ `Entity Framework Core (SQL Server)`
++ `JWT`
++ `Swagger`
++ `AutoMapper`
 ## Getting Started
-Settings are located in Services\UserService. Write down your settings in constants (if the application does not start).
-Also change the ConnectionString field in appsetting.json (the given ConnectionString is configured for SQL Server).
+Settings are located in `Services\UserService`. Write down your settings in constants (if the application does not start).
+Also change the `ConnectionString` field in `appsetting.json` (the given `ConnectionString` is configured for SQL Server).
 ## Code-first database migration
-+ Visual Studio: in the menu go to Tools -> NuGet Package Manager -> Package Manager Console. 
++ Visual Studio: in the menu go to `Tools -> NuGet Package Manager -> Package Manager Console`. 
 Next, at the command line, enter the following commands:
 1. ` Add-Migration InitialMigration` 
 2. ` Update-Database `
 ## Functionality Overview
-+ CRUD operations with User and Event
-+ JWT Authentication
-+ Data schemas (view only)
++ `CRUD operations with User and Event`
++ `JWT Authentication`
++ `Data schemas (view only)`
 ## Page navigation
 + CRUD for `EventInformations` (get all, create, get by id, update, delete) 
   + `GET /api/EventInformations` Get all the events that the given user has 
@@ -38,6 +37,8 @@ Next, at the command line, enter the following commands:
 > + `PUT` (besides `login`)
 > + `DELETE`
 > + `GET` (only when working with `User`)
+> Advice 
+> + In order not to be intimidated, it is best to log in immediately
 ## Using the WEP API
 If you have read the previous article, consider working in this WEB API
 To use the selected function, click on it and then click on the `Try it out` button
@@ -53,6 +54,11 @@ To use the selected function, click on it and then click on the `Try it out` but
   + `PUT`(by id) In the parameters enter Id and In `Request body` you need to fill in the fields with new **login** and **password**
   + `POST` (login) In `Request body` you need to fill in the fields with **login** and **password**<br>
 To execute the query/operation, click the **`Execute`** button
++ `Authorize` 
+  + When executing `POST` (login), a token is issued, which must be inserted into the field and logged in
+> To check if the WEB API is working, use the following login details
+> + loign : Alex and password : 1111
+> + login : Elena and password : 2222
 ## Authors
 + Hleb Punko 
 ## For feedback
