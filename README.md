@@ -54,7 +54,7 @@ To use the selected function, click on it and then click on the `Try it out` but
   + `POST` (login) In `Request body` you need to fill in the fields with **login** and **password**<br>
 To execute the query/operation, click the **`Execute`** button
 + `Authorize` 
-  + When executing `POST` (login), a token is issued, which must be inserted into the field and logged in
+  + When executing `POST` (login), a token is issued (in `Response body`), which must be inserted into the field and logged in
 > To check if the WEB API is working, use the following login details
 > + loign : Alex and password : 1111
 > + login : Elena and password : 2222
