@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Modsen_Pr1.DTO.Requests;
 using Modsen_Pr1.DTO.Responses;
 using Modsen_Pr1.Models;
 using Modsen_Pr1.Services;
-using System.Reflection;
 
 namespace Modsen_Pr1.Controllers
 {
@@ -79,7 +77,5 @@ namespace Modsen_Pr1.Controllers
 				success => Ok(_mapper.Map<EventInfoResponse>(success)),
 				failure => BadRequest(failure));
 		}
-
-		
 	}
 }

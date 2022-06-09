@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims ;
 using Modsen_Pr1.Models ;
-using Microsoft.AspNetCore.Authentication;
 
 namespace Modsen_Pr1.Services ;
 

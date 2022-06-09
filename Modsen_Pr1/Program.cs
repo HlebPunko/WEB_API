@@ -63,7 +63,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-// add authorization
 builder.Services.AddAuthorization();
 builder.Services.AddAutoMapper(typeof(EventInfoProfile), typeof(UserProfile), typeof(AuthProfile));
 

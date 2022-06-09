@@ -28,7 +28,7 @@ public class UserRepository : IUserRepository
         return entity;
     }
 
-    public async Task<User?> UpdateAsync(int id, User user)//TODO И ТУТ РАБОТАЮ
+    public async Task<User?> UpdateAsync(int id, User user)
     {
         var old = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 

@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Modsen_Pr1.DTO.Requests;
 using Modsen_Pr1.DTO.Responses;
 using Modsen_Pr1.Models;
 using Modsen_Pr1.Services;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Modsen_Pr1.Controllers
 {
@@ -51,8 +47,7 @@ namespace Modsen_Pr1.Controllers
 		[HttpPut]
 		[Route("{id}")]
 		[Authorize]
-		public async Task<ActionResult<UserResponse>> Put(int id, [FromBody] UserCreateRequest user)//работаю вот тут //TODO
-			//убрать id
+		public async Task<ActionResult<UserResponse>> Put(int id, [FromBody] UserCreateRequest user)
 		{
 			var mapped = _mapper.Map<User>(user);
 			var result = await _userService.UpdateAsync(id, mapped);
